@@ -1,1 +1,75 @@
-[placeholder]
+--1
+SELECT
+    a.account_id,
+    a.email_account,
+    a.username,
+    av.status AS availability
+FROM account a
+JOIN availability av
+    ON a.availability_id = av.availability_id
+WHERE av.status = 'available';
+--2
+SELECT
+    a.account_id,
+    a.email_account,
+    a.username,
+    g.game_name,
+    ag.description,
+    av.status AS availability
+FROM account a
+JOIN account_game ag
+    ON a.account_id = ag.account_id
+JOIN game g
+    ON ag.game_id = g.game_id
+JOIN availability av
+    ON a.availability_id = av.availability_id
+WHERE g.game_name = 'Zenless Zone Zero';
+--3
+SELECT
+    g.game_name,
+    av.status AS availability,
+    COUNT(ag.account_id) AS number_of_accounts
+FROM game g
+JOIN account_game ag
+    ON g.game_id = ag.game_id
+JOIN account a
+    ON ag.account_id = a.account_id
+JOIN availability av
+    ON a.availability_id = av.availability_id
+GROUP BY
+    g.game_id,
+    g.game_name,
+    av.availability_id,
+    av.status;
+--4
+SELECT
+    a.account_id,
+    a.username,
+    a.email_account,
+    g.game_name,
+    ag.description,
+    av.status AS availability
+FROM account a
+JOIN account_game ag
+    ON a.account_id = ag.account_id
+JOIN game g
+    ON ag.game_id = g.game_id
+JOIN availability av
+    ON a.availability_id = av.availability_id
+WHERE g.game_name = 'Mobile Legends'
+  AND ag.description = 'high level';
+--5
+SELECT
+    a.account_id,
+    a.username,
+    av.status AS availability,
+    COUNT(ag.game_id) AS total_games
+FROM account a
+JOIN availability av
+    ON a.availability_id = av.availability_id
+LEFT JOIN account_game ag
+    ON a.account_id = ag.account_id
+GROUP BY
+    a.account_id,
+    a.username,
+    av.status;
